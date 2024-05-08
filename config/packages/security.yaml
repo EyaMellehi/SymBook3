@@ -39,7 +39,11 @@ security:
     access_control:
         - { path: ^/admin, roles: ROLE_ADMIN }
         - { path: ^/Admin, roles: ROLE_ADMIN }
-        # - { path: ^/profile, roles: ROLE_USER }
+        - { path: ^/User, roles: ROLE_USER }
+        - { path: ^/app_home, roles: IS_AUTHENTICATED_ANONYMOUSLY } 
+        - { path: ^/User_livres, roles: ROLE_USER } 
+        - { path: ^/admin_livres, roles: ROLE_ADMIN } 
+        - { path: ^/admin_categorie, roles: ROLE_ADMIN } 
 
 when@test:
     security:

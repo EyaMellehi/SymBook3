@@ -1,0 +1,34 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Liste des livres
+{% endblock %}
+
+{% block body %}
+	<h1>Les commandes</h1>.
+	
+	<table class="table">
+		<tr>
+			<th>Commande</th>
+			<th>Prix</th>
+            <th colspan='2'>Action</th>
+		</tr>
+
+		{% for livre in livres %}
+			<tr>
+				<td>
+                <div class="book-container"><div class="book-cover">
+		        <img src="{{livre.image}}" alt="photo du livre">
+		        </div>{{livre.titre|capitalize}}</div></td>
+				<td>{{livre.prix}}</td>
+				<td>
+					<a href="#" class="btn btn-success btn-sm">Confirmer</a>
+				</td>
+                <td>
+					<a href="#" class="btn btn-success btn-sm">Supprimer</a>
+				</td>
+				
+			</tr>
+		{% endfor %}
+	</table>
+
+{% endblock %}

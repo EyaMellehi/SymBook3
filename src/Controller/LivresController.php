@@ -23,11 +23,28 @@ class LivresController extends AbstractController
             'livres' => $livres,
         ]);
     }
+    #[Route('/User/livres', name: 'User_livres')]
+    public function index2(LivresRepository $rep): Response
+    {
+        $livres = $rep->findAll();
+        //$livres = $rep->findGreaterThan(100);
+        //dd($livres);
+        return $this->render('livres/index2.html.twig', [
+            'livres' => $livres,
+        ]);
+    }
     #[Route('/admin/livres/show/{id}', name: 'admin_livres_show')]
     public function show(Livres $livre): Response
+    {  
+        return $this->render('livres/show.html.twig', [
+            'livre' => $livre,
+        ]);
+    }
+    #[Route('/User/livres/show/{id}', name: 'User_livres_show')]
+    public function show2(Livres $livre): Response
     {  //paramConvertir
 
-        return $this->render('livres/show.html.twig', [
+        return $this->render('livres/show2.html.twig', [
             'livre' => $livre,
         ]);
     }

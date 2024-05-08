@@ -19,22 +19,29 @@
 				</button>
 				<div class="collapse navbar-collapse" id="navbarColor01">
 					<ul class="navbar-nav me-auto">
+					
 						<li class="nav-item">
 							<a class="nav-link active" href="{{url('app_home')}}">Accueil
 								<span class="visually-hidden">(current)</span>
 							</a>
 						</li>
-						<li class="nav-item">
-							<a class="nav-link" href="{{url('admin_livres')}}">Nos Livres</a>
-						</li>
-						<li class="nav-item">
-							<a class="nav-link" href="{{url('admin_categorie')}}">Nos Catégories</a>
-						</li>
+						  {% if is_granted('ROLE_ADMIN') %}
+       						 <li class="nav-item">
+            					<a class="nav-link" href="{{url('admin_livres')}}">Nos Livres</a>
+        					</li>
+        					<li class="nav-item">
+           					 <a class="nav-link" href="{{url('admin_categorie')}}">Nos Catégories</a>
+        					</li>
+    					{% elseif is_granted('ROLE_USER') %}
+       					 <li class="nav-item">
+           				 <a class="nav-link" href="{{url('User_livres')}}"> Livres</a>
+        				</li>
+    				{% endif %}
 					</ul>
 					<ul class="navbar-nav me-ml">
 					{% if app.user %}
 						<li class="nav-item">
-							<a class="nav-link" href="#">Panier
+							<a class="nav-link" href="{{url('app_commande')}}">Panier
 								<span class="visually-hidden">(current)</span>
 							</a>
 						</li>
