@@ -9,13 +9,20 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Mailer\MailerInterface;
 use SymfonyCasts\Bundle\VerifyEmail\Exception\VerifyEmailExceptionInterface;
 use SymfonyCasts\Bundle\VerifyEmail\VerifyEmailHelperInterface;
+use Symfony\Component\Validator\Constraints\Email;
+use Psr\Log\LoggerInterface;
+use Symfony\Component\Console\Output\ConsoleOutput;
+use Symfony\Component\Routing\RouterInterface;
+
 
 class EmailVerifier
 {
     public function __construct(
         private VerifyEmailHelperInterface $verifyEmailHelper,
         private MailerInterface $mailer,
-        private EntityManagerInterface $entityManager
+        private EntityManagerInterface $entityManager,
+        private LoggerInterface $logger,
+        private RouterInterface $router 
     ) {
     }
 
@@ -27,9 +34,17 @@ class EmailVerifier
             $user->getEmail(),
             ['id' => $user->getId()]
         );
+        $url = $this->router->generate(
+            $verifyEmailRouteName,
+            [
+                'id' => $user->getId(),
+                'token' => $signatureComponents->getSignedUrl(),
+            ],
+            RouterInterface::ABSOLUTE_URL
+        );
 
         $context = $email->getContext();
-        $context['signedUrl'] = $signatureComponents->getSignedUrl();
+        $context['signedUrl'] = $url;
         $context['expiresAtMessageKey'] = $signatureComponents->getExpirationMessageKey();
         $context['expiresAtMessageData'] = $signatureComponents->getExpirationMessageData();
 
@@ -37,17 +52,16 @@ class EmailVerifier
 
         $this->mailer->send($email);
     }
-
+    
     /**
      * @throws VerifyEmailExceptionInterface
      */
     public function handleEmailConfirmation(Request $request, User $user): void
-    {
-        $this->verifyEmailHelper->validateEmailConfirmationFromRequest($request, (string) $user->getId(), $user->getEmail());
+{
+    $this->verifyEmailHelper->validateEmailConfirmationFromRequest($request, (string) $user->getId(), $user->getEmail());
+    $user->setVerified(true);
+    $this->entityManager->persist($user);
+    $this->entityManager->flush();
+}
 
-        $user->setVerified(true);
-
-        $this->entityManager->persist($user);
-        $this->entityManager->flush();
-    }
 }

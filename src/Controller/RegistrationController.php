@@ -6,6 +6,8 @@ use App\Entity\User;
 use App\Form\RegistrationFormType;
 use App\Repository\UserRepository;
 use App\Security\EmailVerifier;
+use App\Service\JWTService;
+use App\Service\SendEmailService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -24,7 +26,7 @@ class RegistrationController extends AbstractController
     }
 
     #[Route('/register', name: 'app_register')]
-    public function register(Request $request, UserPasswordHasherInterface $userPasswordHasher, EntityManagerInterface $entityManager): Response
+    public function register(Request $request, UserPasswordHasherInterface $userPasswordHasher, EntityManagerInterface $entityManager,JWTService $jwt,SendEmailService $mail): Response
     {   
         $user = new User();
         $form = $this->createForm(RegistrationFormType::class, $user);
@@ -42,16 +44,24 @@ class RegistrationController extends AbstractController
             $entityManager->persist($user);
             $entityManager->flush();
 
-            // generate a signed url and email it to the user
-            $this->emailVerifier->sendEmailConfirmation('app_verify_email', $user,
-                (new TemplatedEmail())
-                    ->from(new Address('mellehieya@gmail.com', 'SymBook Admin'))
-                    ->to($user->getEmail())
-                    ->subject('Please Confirm your Email')
-                    ->htmlTemplate('registration/confirmation_email.html.twig')
-            );
 
-            // do anything else you need here, like send an email
+            //token
+            $header=[
+                'typ'=>'JWT',
+                'alg'=>'HS256'
+            ];
+            $payload=[
+                'user_id'=>$user->getId(),
+            ];
+            $token=$jwt->generate($header,$payload,$this->getParameter('app.JWT'));
+            $mail->send(
+                'eyamellehi@gmail.com',
+                $user->getEmail(),
+                'Activation de votre compte',
+                'confirmation_email',
+                compact('user','token')
+            );
+            $this->addFlash('success','utilisateur inscrit,veuillez cliquer sur le lien recu pour confirmer votre adresse email');  
 
             return $this->redirectToRoute('app_login');
         }
@@ -61,10 +71,24 @@ class RegistrationController extends AbstractController
         ]);
     }
 
-    #[Route('/verify/email', name: 'app_verify_email')]
-    public function verifyUserEmail(Request $request, TranslatorInterface $translator, UserRepository $userRepository): Response
-    {
-        $id = $request->query->get('id');
+    #[Route('/verify/{token}', name: 'app_verify_email')]
+    public function verifyUserEmail($token,JWTService $jwt,Request $request, TranslatorInterface $translator, UserRepository $userRepository,EntityManagerInterface $em): Response
+    {   if($jwt->isValid($token) && !$jwt->isExpired($token) && $jwt->check(
+        $token,$this->getParameter('app.JWT'))){
+            $payload=$jwt->getPayload($token);
+            $user=$userRepository->find($payload['user_id']);
+            if($user && !$user->isVerified()){
+                $user->setVerified(true);
+                $em->flush();
+                $this->addFlash('success','utilisateur active');
+                return $this->redirectToRoute('app_home');
+            }
+            }
+            $this->addFlash('danger','le token est invalid');
+            return $this->redirectToRoute('app_register');
+        }
+    }
+        /*$id = $request->query->get('id');
 
         if (null === $id) {
             return $this->redirectToRoute('app_register');
@@ -89,5 +113,4 @@ class RegistrationController extends AbstractController
         $this->addFlash('success', 'Your email address has been verified.');
 
         return $this->redirectToRoute('app_home');
-    }
-}
+    }*/

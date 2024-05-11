@@ -47,6 +47,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column]
     private bool $isVerified = false;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $confirmationToken = null; // Add this field
+
     /**
      * @var Collection<int, Commande>
      */
@@ -169,14 +172,26 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function IsVerified(): bool
+    public function isVerified(): ?bool
     {
         return $this->isVerified;
     }
 
     public function setVerified(bool $isVerified): static
+{
+    $this->isVerified = $isVerified;
+
+    return $this;
+}
+
+    public function getConfirmationToken(): ?string
     {
-        $this->isVerified = $isVerified;
+        return $this->confirmationToken;
+    }
+
+    public function setConfirmationToken(?string $confirmationToken): static
+    {
+        $this->confirmationToken = $confirmationToken;
 
         return $this;
     }

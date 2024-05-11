@@ -1,11 +1,6 @@
 <h1>Hi! Please confirm your email!</h1>
 
-<p>
-    Please confirm your email address by clicking the following link: <br><br>
-    <a href="{{ signedUrl|raw }}">Confirm my Email</a>.
-    This link will expire in {{ expiresAtMessageKey|trans(expiresAtMessageData, 'VerifyEmailBundle') }}.
-</p>
-
-<p>
-    Cheers!
-</p>
+ <p>Bonjour {{ user.username }},</p>
+    
+    <p>Merci de vous être inscrit. Veuillez cliquer sur le lien ci-dessous pour vérifier votre adresse e-mail :</p>
+    <a href="{{ url('app_verify_email', {'token': token}) }}">Vérifier mon adresse e-mail</a>

@@ -1,36 +1,27 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Liste des livres
-{% endblock %}
+{% block title %}Liste des livres{% endblock %}
 
 {% block body %}
-	<h1>Liste des livres</h1>.
-	
-	<table class="table">
-		<tr>
-			<th>Titre</th>
-			<th>ISBN</th>
-			<th>Editeur</th>
-			<th>Date Edition</th>
-			<th>Prix</th>
-			<th>Catégorie</th>
-			<th>Action</th>
-		</tr>
+    <h1>Liste des livres</h1>
 
-		{% for livre in livres %}
-			<tr>
-				<td>{{livre.titre|capitalize}}</td>
-				<td>{{livre.ISBN}}</td>
-				<td>{{livre.editeur}}</td>
-				<td>{{livre.editedAt|date('d-m-Y')}}</td>
-				<td>{{livre.prix}}</td>
-				<td>{{livre.categorie.libelle}}</td>
-				<td>
-					<a href="{{url('User_livres_show',{'id':livre.id})}}" class="btn btn-success btn-sm">Voir plus</a>
-				</td>
-				
-			</tr>
-		{% endfor %}
-	</table>
-
+    <div class="row">
+        {% for livre in livres %}
+            <div class="col-md-4 mb-4">
+                <div class="card">
+                    <img src="{{ livre.image }}" class="card-img-top" alt="photo du livre" style="width: 100%; height: 200px; object-fit: cover;">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ livre.titre|capitalize }}</h5>
+                        <p class="card-text"><strong>ISBN:</strong> {{ livre.ISBN }}</p>
+                        <p class="card-text"><strong>Editeur:</strong> {{ livre.editeur }}</p>
+                        <p class="card-text"><strong>Date Edition:</strong> {{ livre.editedAt|date('d-m-Y') }}</p>
+                        <p class="card-text"><strong>Prix:</strong> {{ livre.prix }}</p>
+                        <p class="card-text"><strong>Catégorie:</strong> {{ livre.categorie.libelle }}</p>
+                        <p class="card-text">{{ livre.resume | slice(0, 150) }}{% if livre.resume | length > 150 %}...{% endif %}</p>
+                        <a href="{{ url('User_livres_commande', {'id': livre.id}) }}" class="btn btn-primary">Buy Now</a>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
 {% endblock %}
