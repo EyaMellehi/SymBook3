@@ -46,16 +46,20 @@
 							</a>
 						</li>
 						<li class="nav-item">
-							<a class="nav-link" href="{{url('app_logout')}}">SignOut</a>
+							<a class="nav-link" href="{{url('user_profile_update')}}">Mon Compte</a>
+							<span class="visually-hidden">(current)</span>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link" href="{{url('app_logout')}}">Déconnexion</a>
 							<span class="visually-hidden">(current)</span>
 						</li>
 						{% else %}
 						<li class="nav-item">
-							<a class="nav-link" href="{{url('app_register')}}">SignUp</a>
+							<a class="nav-link" href="{{url('app_register')}}">s'inscrire</a>
 							<span class="visually-hidden">(current)</span>
 						</li>
 						<li class="nav-item">
-							<a class="nav-link" href="{{url('app_login')}}">SignIn</a>
+							<a class="nav-link" href="{{url('app_login')}}">SeConnecter</a>
 							<span class="visually-hidden">(current)</span>
 						</li>
 						{% endif %}

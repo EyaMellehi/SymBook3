@@ -40,6 +40,13 @@ class LivresController extends AbstractController
             'livre' => $livre,
         ]);
     }
+    #[Route('/User/livres/show/{id}', name: 'user_livres_show')]
+    public function show2(Livres $livre): Response
+    {  
+        return $this->render('livres/showU.html.twig', [
+            'livre' => $livre,
+        ]);
+    }
     
     /*#[Route('/admin/livres/create', name: 'admin_livres_create')]
     public function create(EntityManagerInterface $em): Response
