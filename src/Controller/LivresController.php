@@ -27,8 +27,7 @@ class LivresController extends AbstractController
     public function index2(LivresRepository $rep): Response
     {
         $livres = $rep->findAll();
-        //$livres = $rep->findGreaterThan(100);
-        //dd($livres);
+        
         return $this->render('livres/index2.html.twig', [
             'livres' => $livres,
         ]);

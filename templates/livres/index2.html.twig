@@ -8,15 +8,14 @@
     <div class="row">
         {% for livre in livres %}
             <div class="col-md-4 mb-4">
-                <div class="card">
+                <div class="card" style="background-color:grey;"> <!-- Set background color to black -->
                     <img src="{{ livre.image }}" class="card-img-top" alt="photo du livre" style="width: 100%; height: 200px; object-fit: cover;">
                     <div class="card-body">
                         <h5 class="card-title">{{ livre.titre|capitalize }}</h5>
                         <p class="card-text"><strong>Auteur:</strong> {{ livre.auteur}}</p>
                         <p class="card-text"><strong>Catégorie:</strong> {{ livre.categorie.libelle }}</p>
-                        <a href="{{ url('User_livres_commande', {'id': livre.id}) }}" class="btn btn-primary">Acheter</a>
-                        <a href="{{url('user_livres_show',{'id':livre.id})}}" class="btn btn-dark">Voir plus</a>
-
+                        <a href="{{ url('User_livres_commande2', {'id': livre.id}) }}" class="btn btn-primary">Acheter</a>
+                        <a href="{{url('user_livres_show',{'id':livre.id})}}" class="btn btn-light">Voir plus</a>
                     </div>
                 </div>
             </div>

@@ -40,6 +40,7 @@ security:
         - { path: ^/admin, roles: ROLE_ADMIN }
         - { path: ^/Admin, roles: ROLE_ADMIN }
         - { path: ^/User, roles: ROLE_USER }
+        - { path: ^/user, roles: ROLE_USER }
         - { path: ^/app_home, roles: IS_AUTHENTICATED_ANONYMOUSLY } 
         - { path: ^/User_livres, roles: ROLE_USER } 
         - { path: ^/admin_livres, roles: ROLE_ADMIN } 

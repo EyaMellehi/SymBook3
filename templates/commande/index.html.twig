@@ -6,7 +6,7 @@
 {% block body %}
 	<h1>Panier</h1>.
 	
-	<table class="table">
+	<table class="table table-hover">
 		<thead>
 		<tr>
 			<th>Produit</th>
@@ -47,4 +47,5 @@
 			</tr>
 		</tfoot>
 	</table>
+	<a href="{{url('orders_add')}}" class="btn btn-primary">Valider le panier</a>
 {% endblock %}

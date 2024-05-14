@@ -38,8 +38,21 @@ class CommandeController extends AbstractController
             $panier[$id]++;
         }
         $s->set('panier',$panier);
+        return $this->redirectToRoute('app_commande');
+    }
+    #[Route('/User/livres/commande/{id}', name: 'User_livres_commande2')]
+    public function add2(SessionInterface $s,EntityManagerInterface $entityManager, Livres $livre)
+    {   $id=$livre->getId();
+        $panier=$s->get('panier',[]);
+        if(empty($panier[$id])){
+            $panier[$id]=1;
+        }else{
+            $panier[$id]++;
+        }
+        $s->set('panier',$panier);
         return $this->redirectToRoute('User_livres');
     }
+
 
     #[Route('/User/remove/{id}', name: 'User_livres_remove')]
     public function remove(SessionInterface $s,EntityManagerInterface $entityManager, Livres $livre)
